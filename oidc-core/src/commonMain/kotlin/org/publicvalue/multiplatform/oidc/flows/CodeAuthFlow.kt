@@ -1,6 +1,7 @@
 package org.publicvalue.multiplatform.oidc.flows
 
 import io.ktor.client.request.HttpRequestBuilder
+import io.ktor.http.URLBuilder
 import org.publicvalue.multiplatform.oidc.OpenIdConnectClient
 import org.publicvalue.multiplatform.oidc.OpenIdConnectException
 import org.publicvalue.multiplatform.oidc.types.AuthCodeRequest
@@ -44,6 +45,25 @@ abstract class CodeAuthFlow(val client: OpenIdConnectClient) {
             client.discover()
         }
         val request = client.createAuthorizationCodeRequest()
+        return getAccessToken(request, configure)
+    }
+
+    /**
+     * Start the authorization flow to request an access token.
+     *
+     * @param configure configuration closure to configure the http request builder with (will _not_
+     * be used for discovery if necessary)
+     *
+     * @param configureCodeRequest configuration closure to configure the url builder for authorization request (Extra parameters)
+     *
+     */
+    @Suppress("unused")
+    @Throws(CancellationException::class, OpenIdConnectException::class)
+    suspend fun getAccessToken(configure: (HttpRequestBuilder.() -> Unit)? = null, configureCodeRequest: (URLBuilder.() -> Unit)? = null): AccessTokenResponse = wrapExceptions {
+        if (!client.config.discoveryUri.isNullOrEmpty()) {
+            client.discover()
+        }
+        val request = client.createAuthorizationCodeRequest(configureCodeRequest)
         return getAccessToken(request, configure)
     }
 

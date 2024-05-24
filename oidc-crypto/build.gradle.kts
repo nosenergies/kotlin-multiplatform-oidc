@@ -29,19 +29,19 @@ kotlin {
         }
     }
 
-    listOf(
-        iosX64(),
-        iosArm64(),
-        iosSimulatorArm64(),
-    ).forEach {
-        it.compilations {
-            val main by getting {
-                cinterops {
-                    create("KCrypto")
-                }
-            }
-        }
-    }
+//    listOf(
+//        iosX64(),
+//        iosArm64(),
+//        iosSimulatorArm64(),
+//    ).forEach {
+//        it.compilations {
+//            val main by getting {
+//                cinterops {
+//                    create("KCrypto")
+//                }
+//            }
+//        }
+//    }
 
     targets.withType<org.jetbrains.kotlin.gradle.plugin.mpp.KotlinNativeTarget> {
         compilations["main"].compilerOptions.options.freeCompilerArgs.add("-Xexport-kdoc")
